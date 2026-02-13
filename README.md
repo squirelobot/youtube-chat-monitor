@@ -14,6 +14,35 @@ Pendant un live YouTube avec système de vote (les viewers tapent `1`, `2` ou `3
   - 📊 Pics d'activité anormaux (spam/bots)
   - 👥 Comptes créés récemment qui votent en masse
 
+## 🛡️ Redundant Capture (Multiple Methods)
+
+Le script `yt_chat_backup.py` lance **3 méthodes de capture en parallèle** pour garantir qu'aucun message n'est perdu :
+
+| Méthode | Lib | Cookies ? | Fiabilité |
+|---------|-----|-----------|-----------|
+| **Innertube API** | Custom scraper | ❌ Non | ⭐⭐⭐ Très fiable |
+| **chat_downloader** | `chat-downloader` | ❌ Non | ⭐⭐ Fiable |
+| **yt-dlp** | `yt-dlp` | ⚠️ Parfois | ⭐⭐ Dépend de l'IP |
+
+À la fin, les 3 fichiers sont **fusionnés et dédupliqués** automatiquement.
+
+```bash
+# Lancer la capture redondante
+python3 yt_chat_backup.py "URL_DU_LIVE" -o chat_backup
+
+# Avec seulement certaines méthodes
+python3 yt_chat_backup.py "URL" -m innertube,chatdl
+
+# Avec durée max
+python3 yt_chat_backup.py "URL" -d 3600  # 1 heure
+```
+
+Résultat dans `chat_backup/` :
+- `chat_innertube_*.json` — Capture méthode 1
+- `chat_chatdl_*.json` — Capture méthode 2
+- `chat_ytdlp_*.json` — Capture méthode 3
+- `chat_MERGED_*.json` — ✅ Fichier fusionné (toutes les méthodes combinées, dédupliqué)
+
 ## 📦 Installation
 
 ```bash
