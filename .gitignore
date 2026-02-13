@@ -1,0 +1,6 @@
+chat_*.json
+vote_results/
+capture.log
+__pycache__/
+*.pyc
+.env
